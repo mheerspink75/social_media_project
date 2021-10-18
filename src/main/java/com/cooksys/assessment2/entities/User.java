@@ -18,28 +18,17 @@ public class User {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
-    private String username;
+    @Embedded
+    private Credentials credentials;
 
-    @Column(nullable = false)
-    private String password;
+    @Embedded
+    private Profile profile;
 
     @Column(nullable = false)
     private Timestamp joined;
 
     @Column(nullable = false)
     private boolean deleted;
-
-    private String firstName;
-
-    private String lastName;
-
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String phone;
-
 
     @Column(nullable = false)
     @OneToMany(mappedBy = "author")
