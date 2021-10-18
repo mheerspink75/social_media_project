@@ -17,10 +17,8 @@ public class Tweet {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
     @ManyToOne
-    @JoinColumn
-    private Users author;
+    private User author;
 
     @Column(nullable = false)
     private Timestamp posted;
@@ -31,33 +29,26 @@ public class Tweet {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    @OneToMany(mappedBy = "replies")
+    @ManyToOne
     private Tweet inReplyTo;
 
-    @Column(nullable = false)
-    @ManyToOne
-    @JoinColumn
+    @OneToMany(mappedBy = "replies")
     private List<Tweet> replies;
 
-    @Column(nullable = false)
-    @OneToMany(mappedBy = "reposts")
+    @ManyToOne
     private Tweet repostOf;
 
-    @Column(nullable = false)
-    @ManyToOne
-    @JoinColumn
+    @OneToMany(mappedBy = "reposts")
     private List<Tweet> reposts;
 
-    @Column(nullable = false)
-    private List<Users> likes;
+    @ManyToMany
+    private List<User> likes;
 
-    @Column(nullable = false)
+    @ManyToMany
     private List<Hashtag> hashtags;
 
-    @Column(nullable = false)
-    @ManyToMany(mappedBy = "tweets")
-    private List<Users> usersMentioned;
+    @ManyToMany(mappedBy = "mentions")
+    private List<User> userMentioned;
 
 
 }

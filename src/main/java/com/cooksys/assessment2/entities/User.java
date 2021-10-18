@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Data
-public class Users {
+@Table(name="user-table")
+public class User {
 
     @Id
     @GeneratedValue
@@ -44,18 +45,17 @@ public class Users {
     @OneToMany(mappedBy = "author")
     private List<Tweet> tweets;
 
-    @Column(nullable = false)
+    @ManyToMany
     private List<Tweet> likedTweets;
 
-    @Column(nullable = false)
     @ManyToMany(mappedBy = "followers")
-    private List<Users> following;
+    private List<User> following;
+
+    @ManyToMany
+    private List<User> followers;
 
     @Column(nullable = false)
-    @ManyToMany(mappedBy = "following")
-    private List<Users> followers;
-
-    @Column(nullable = false)
+    @ManyToMany
     private List<Tweet> mentions;
 
 
