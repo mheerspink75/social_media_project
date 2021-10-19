@@ -8,6 +8,6 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 
-public class ContexDto {
+public class ContextDto {
 
 }
