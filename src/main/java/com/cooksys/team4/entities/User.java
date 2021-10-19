@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @NoArgsConstructor
@@ -24,7 +25,8 @@ public class User {
     @Embedded
     private Profile profile;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Timestamp joined;
 
     @Column(nullable = false)
