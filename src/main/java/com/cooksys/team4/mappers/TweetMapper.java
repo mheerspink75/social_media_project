@@ -5,9 +5,10 @@ import java.util.List;
 import com.cooksys.team4.dtos.TweetRequestDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.entities.Tweet;
+
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = { UserMapper.class })
 public interface TweetMapper {
 
     Tweet requestDtoToEntity(TweetRequestDto tweetRequestDto);
@@ -15,6 +16,5 @@ public interface TweetMapper {
     TweetResponseDto entityToResponseDto(Tweet tweet);
 
     List<TweetResponseDto> entitiesToResponseDtos(List<Tweet> tweets);
-
 
 }

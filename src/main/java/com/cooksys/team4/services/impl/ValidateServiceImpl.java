@@ -1,15 +1,17 @@
 package com.cooksys.team4.services.impl;
 
 import com.cooksys.team4.services.ValidateService;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ValidateServiceImpl implements ValidateService {
     /**
-     * TODO: implement
-     * Checks whether or not a given username exists.
+     * TODO: implement Checks whether or not a given username exists.
+     * 
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validateusernameexistsusername
      */
     @Override
@@ -18,8 +20,8 @@ public class ValidateServiceImpl implements ValidateService {
     }
 
     /**
-     * TODO: implement
-     * Checks whether or not a given username is available.
+     * TODO: implement Checks whether or not a given username is available.
+     * 
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validateusernameavailableusername
      */
     @Override
@@ -28,8 +30,8 @@ public class ValidateServiceImpl implements ValidateService {
     }
 
     /**
-     * TODO: implement
-     * Checks whether or not a given hashtag exists.
+     * TODO: implement Checks whether or not a given hashtag exists.
+     * 
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validatetagexistslabel
      */
     @Override
