@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class ValidateController {
 
-    @GetMapping("username/exists/@{username}")
+    @GetMapping("/username/exists/@{username}")
     public void userNameExists(@PathVariable String username) {
         /**
          * TODO: implement
@@ -28,7 +28,7 @@ public class ValidateController {
          */
     }
 
-    @GetMapping("username/available/@{username}")
+    @GetMapping("/username/available/@{username}")
     public void userNameAvailable(@PathVariable String username) {
 
         /**
@@ -39,7 +39,7 @@ public class ValidateController {
          */
     }
 
-    @GetMapping("tag/exists/@{label}")
+    @GetMapping("/tag/exists/@{label}")
     public void tagExists(@PathVariable String label) {
         /**
          * TODO: implement
