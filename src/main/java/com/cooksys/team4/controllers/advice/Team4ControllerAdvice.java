@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice(basePackages = { "com.cooksys.team4.comtrollers" })
+@ControllerAdvice(basePackages = { "com.cooksys.team4.controllers" })
 @ResponseBody
 public class Team4ControllerAdvice {
 
