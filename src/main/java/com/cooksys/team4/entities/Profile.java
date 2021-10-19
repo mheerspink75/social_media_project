@@ -1,4 +1,4 @@
-package com.cooksys.assessment2.entities;
+package com.cooksys.team4.entities;
 
 import lombok.Data;
 
