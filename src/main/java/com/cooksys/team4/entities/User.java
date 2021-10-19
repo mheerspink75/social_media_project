@@ -3,16 +3,25 @@ package com.cooksys.team4.entities;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @NoArgsConstructor
 @Data
-@Table(name="user_table")
+@Table(name = "user_table")
 public class User {
 
     @Id
@@ -32,22 +41,21 @@ public class User {
     @Column(nullable = false)
     private boolean deleted;
 
-    @Column(nullable = false)
     @OneToMany(mappedBy = "author")
     private List<Tweet> tweets;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "likes")
     private List<Tweet> likedTweets;
 
     @ManyToMany(mappedBy = "followers")
     private List<User> following;
 
     @ManyToMany
+    @JoinTable
     private List<User> followers;
 
-    @Column(nullable = false)
     @ManyToMany
+    @JoinTable
     private List<Tweet> mentions;
-
 
 }

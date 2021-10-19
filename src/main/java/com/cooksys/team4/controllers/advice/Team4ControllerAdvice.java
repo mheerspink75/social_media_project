@@ -2,19 +2,18 @@ package com.cooksys.team4.controllers.advice;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cooksys.team4.dtos.ErrorDto;
+import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.exceptions.NotAuthorizedException;
 import com.cooksys.team4.exceptions.NotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.cooksys.team4.exceptions.BadRequestException;
-import com.cooksys.team4.dtos.ErrorDto;
-
-
-@ControllerAdvice(basePackages = {"com.cooksys.team4.comtrollers"})
+@ControllerAdvice(basePackages = { "com.cooksys.team4.comtrollers" })
 @ResponseBody
 public class Team4ControllerAdvice {
 
@@ -32,7 +31,8 @@ public class Team4ControllerAdvice {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotAuthorizedException.class)
-    public ErrorDto handleNotAuthorizedException(HttpServletRequest request, NotAuthorizedException notAuthorizedException) {
+    public ErrorDto handleNotAuthorizedException(HttpServletRequest request,
+            NotAuthorizedException notAuthorizedException) {
         return new ErrorDto(notAuthorizedException.getMessage());
     }
 
