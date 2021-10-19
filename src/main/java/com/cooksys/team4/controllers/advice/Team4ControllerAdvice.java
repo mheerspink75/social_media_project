@@ -14,7 +14,7 @@ import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.dtos.ErrorDto;
 
 
-@ControllerAdvice(basePackages = {"com.cooksys.team4.comtrollers"})
+@ControllerAdvice(basePackages = {"com.cooksys.team4.controllers"})
 @ResponseBody
 public class Team4ControllerAdvice {
 
