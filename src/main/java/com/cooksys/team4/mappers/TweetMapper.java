@@ -1,4 +1,4 @@
 package com.cooksys.team4.mappers;
 
-public class TweetMapper {
+public interface TweetMapper {
 }
