@@ -36,7 +36,7 @@ public class HashtagController {
 
     @GetMapping
     public void getTags() {
-s
+
         /**
          * TODO: implement
          * Get /tags
