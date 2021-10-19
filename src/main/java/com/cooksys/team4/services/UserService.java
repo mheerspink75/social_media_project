@@ -9,18 +9,6 @@ import java.util.Optional;
 
 public interface UserService {
     /**
-     * Checks whether or not a given username exists.
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validateusernameexistsusername
-     */
-    public boolean usernameExists(String username);
-
-    /**
-     * Checks whether or not a given username is available.
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validateusernameavailableusername
-     */
-    public boolean usernameAvailable(String username);
-
-    /**
      * Retrieves all active (non-deleted) users as an array.
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----users
      */

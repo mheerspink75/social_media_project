@@ -15,26 +15,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     /**
      * TODO: implement
-     * Checks whether or not a given username exists.
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validateusernameexistsusername
-     */
-    @Override
-    public boolean usernameExists(String username) {
-        return false;
-    }
-
-    /**
-     * TODO: implement
-     * Checks whether or not a given username is available.
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validateusernameavailableusername
-     */
-    @Override
-    public boolean usernameAvailable(String username) {
-        return false;
-    }
-
-    /**
-     * TODO: implement
      * Retrieves all active (non-deleted) users as an array.
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----users
      */
