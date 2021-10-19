@@ -1,4 +1,4 @@
-package com.cooksys.assessment2.dto;
+package com.cooksys.team4.dtos;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
