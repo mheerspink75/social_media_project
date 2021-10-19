@@ -1,13 +1,13 @@
-package com.cooksys.assessment2;
+package com.cooksys.team4;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Assessment2Application {
+public class Team4Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Assessment2Application.class, args);
+		SpringApplication.run(Team4Application.class, args);
 	}
 
 }

@@ -1,10 +1,10 @@
-package com.cooksys.assessment2;
+package com.cooksys.team4;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Assessment2ApplicationTests {
+class Team4ApplicationTests {
 
 	@Test
 	void contextLoads() {
