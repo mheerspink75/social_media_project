@@ -9,4 +9,6 @@ import java.util.List;
 @Data
 
 public class UserRequestDto {
+    private CredentialsDto credentials;
+    private ProfileDto profile;
 }

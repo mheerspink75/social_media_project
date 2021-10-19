@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @NoArgsConstructor
@@ -20,13 +21,14 @@ public class Tweet {
     @ManyToOne
     private User author;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private Timestamp posted;
 
     @Column(nullable = false)
     private boolean deleted;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String content;
 
     @ManyToOne
