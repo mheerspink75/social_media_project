@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return userMapper.entitiesToResponseDtos(userRepository.findAll());
+        return userMapper.entitiesToResponseDtos(userRepository.findAllByDeletedFalse());
     }
 
     /**
