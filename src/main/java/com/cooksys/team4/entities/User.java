@@ -42,8 +42,6 @@ public class User {
 
 
     @Column(nullable = false)
-    @Getter
-    @Setter
     private boolean deleted;
 
     @OneToMany(mappedBy = "author")
