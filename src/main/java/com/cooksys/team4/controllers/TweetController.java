@@ -1,24 +1,37 @@
 package com.cooksys.team4.controllers;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.team4.dtos.TweetResponseDto;
+import com.cooksys.team4.services.TweetService;
+
 import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tweets")
 public class TweetController {
-    /**
+
+	private final TweetService tweetService;
+	
+	/**
      * TODO: implement GET /tweets Retrieves all (non-deleted) tweets. The tweets
      * should appear in reverse-chronological order. Response: ['Tweet']
      */
     @GetMapping
-    public void getTweets() {
+    @ResponseStatus(HttpStatus.OK)
+    public List<TweetResponseDto> getTweets() {
+    	return tweetService.getTweets();
     }
 
     /**
