@@ -43,11 +43,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-//    private void validatUsername(UserRequestDto userRequestDto) {
-//        String username = userRequestDto.getCredentials().getUsername();
-//        System.out.println(username);
-//    }
-
     /**
      * TODO: implement Retrieves all active (non-deleted) users as an array.
      * 
