@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private void checkIfUserExists(String username) {
+    private boolean checkIfUserExists(String username) {
 
         Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
 
@@ -41,6 +41,22 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("A user with username : " + username
                     + " already exists");
         }
+
+        return false;
+    }
+
+    private User handleUserExists(User user) {
+        if (user.isDeleted()) {
+            user.setDeleted(false);
+            userRepository.saveAndFlush(user);
+            return user;
+        }
+        throw new BadRequestException("User exists and is active");
+    }
+
+    private User handleNotUserExists(User userToSave) {
+        userRepository.saveAndFlush(userToSave);
+        return userToSave;
     }
 
     /**
@@ -66,15 +82,14 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
 
         validateUserRequest(userRequestDto);
-        checkIfUserExists(userRequestDto.getCredentials().getUsername());
+        String username = userRequestDto.getCredentials().getUsername();
 
-//        if (userRepository.findByCredentialsUsernameAndDeletedFalse()|| validateUserRequest(userRequestDto)) {
-//            throw new BadRequestException("User already exits");
-//        }
         User userToSave = userMapper.requestDtoToEntity(userRequestDto);
-        userToSave.setDeleted(false);
+        Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
+        User user =
+                optionalUser.map(this::handleUserExists).orElseGet(() -> handleNotUserExists(userToSave));
 
-        return userMapper.entityToResponseDto(userRepository.saveAndFlush(userToSave));
+        return userMapper.entityToResponseDto(userToSave);
     }
 
     /**
