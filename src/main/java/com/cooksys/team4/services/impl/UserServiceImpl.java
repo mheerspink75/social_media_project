@@ -99,8 +99,16 @@ public class UserServiceImpl implements UserService {
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusername">...</a>
      */
     @Override
-    public Optional<UserResponseDto> getUser(String username) {
-        return Optional.empty();
+    public UserResponseDto getUser(String username) {
+        Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
+        User existingUser = optionalUser.get();
+
+        if (existingUser.isDeleted()) {
+            throw new BadRequestException("Unable to get user");
+        }
+
+        return userMapper.entityToResponseDto(existingUser);
+
     }
 
     /**
