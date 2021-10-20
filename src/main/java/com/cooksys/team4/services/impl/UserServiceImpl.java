@@ -7,6 +7,8 @@ import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserRequestDto;
 import com.cooksys.team4.dtos.UserResponseDto;
+import com.cooksys.team4.mappers.UserMapper;
+import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.UserService;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +18,10 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+
     /**
      * TODO: implement Retrieves all active (non-deleted) users as an array.
      * 
@@ -23,7 +29,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return List.of();
+        return userMapper.entitiesToResponseDtos(userRepository.findAll());
     }
 
     /**

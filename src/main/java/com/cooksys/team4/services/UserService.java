@@ -14,7 +14,7 @@ public interface UserService {
      * 
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----users
      */
-    public List<UserResponseDto> getAllUsers();
+    List<UserResponseDto> getAllUsers();
 
     /**
      * Creates a new user. If any required fields are missing or the username
