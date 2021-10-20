@@ -198,6 +198,15 @@ public class Seeder implements CommandLineRunner {
         tweet6.setContent("This is some content 6");
         tweetRepository.saveAndFlush(tweet6);
 
+
+        // --- Start Tweet 7 ---
+        Tweet deletedTweet = new Tweet();
+        deletedTweet.setAuthor(user3);
+        deletedTweet.setDeleted(true);
+        // Set Content @PARAM String
+        deletedTweet.setContent("This is a deleted tweet (User3)");
+        tweetRepository.saveAndFlush(deletedTweet);
+
         // ----- LIST of Tweets + Adding to User# -----
         List<Tweet> user1Tweets = List.of(tweet1, tweet2);
         user1.setTweets(user1Tweets);
