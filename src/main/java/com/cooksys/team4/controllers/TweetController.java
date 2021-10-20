@@ -56,8 +56,11 @@ public class TweetController {
      * such tweet exists, or the given tweet is deleted, an error should be sent in
      * lieu of a response. Response: 'Tweet'
      */
+   
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public void getTweet(@PathVariable long id) {
+    public TweetResponseDto getTweet(@PathVariable long id) {
+    	return tweetService.getTweetById(id);
     }
 
     /**
