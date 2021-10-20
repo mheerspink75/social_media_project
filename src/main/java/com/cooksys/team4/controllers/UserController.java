@@ -2,6 +2,7 @@ package com.cooksys.team4.controllers;
 
 import java.util.List;
 
+import com.cooksys.team4.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/users")
 
 public class UserController {
+
+    private final UserService userService;
+
     @GetMapping
     public List<UserResponseDto> getAllUsers() {
 
-        return List.of();
+        return userService.getAllUsers();
     }
 
     @ResponseStatus(code = HttpStatus.CREATED)
