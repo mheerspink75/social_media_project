@@ -9,16 +9,25 @@ import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.HashTagDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserResponseDto;
+import com.cooksys.team4.entities.Tweet;
+import com.cooksys.team4.mappers.TweetMapper;
+import com.cooksys.team4.repositories.TweetRepository;
 import com.cooksys.team4.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TweetServiceImpl implements TweetService{@Override
+public class TweetServiceImpl implements TweetService{
+
+	private final TweetMapper tweetMapper;
+	private final TweetRepository tweetRepository;
+
+
+	@Override
 	public List<TweetResponseDto> getTweets() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Tweet> tweetEntities = tweetRepository.findAllByDeletedOrderByPosted(false);
+		return tweetMapper.entitiesToResponseDtos(tweetEntities);
 	}
 
 	@Override
@@ -42,7 +51,7 @@ public class TweetServiceImpl implements TweetService{@Override
 	@Override
 	public void likeTweet(Long id, CredentialsDto credentialsDto) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -92,5 +101,5 @@ public class TweetServiceImpl implements TweetService{@Override
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }
