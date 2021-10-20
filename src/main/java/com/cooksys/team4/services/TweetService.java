@@ -1,8 +1,8 @@
-package com.cooksys.team4.services;
+package com.cooksys.tVeam4.services;
+
+import com.cooksys.team4.dtos.TweetResponseDto;
 
 import java.util.List;
-import java.util.Optional;
-import org.springframework.http.ResponseEntity;
 
 import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
