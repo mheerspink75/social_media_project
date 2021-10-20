@@ -101,7 +101,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto getUser(String username) {
         Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
-        User existingUser = optionalUser.get();
+        User existingUser = optionalUser.orElseThrow(() -> new BadRequestException(
+                "User doesn't exist"));
 
         if (existingUser.isDeleted()) {
             throw new BadRequestException("Unable to get user");
