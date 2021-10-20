@@ -42,7 +42,7 @@ public class UserController {
 
     @PatchMapping("/@{username}")
     public UserResponseDto patchUser(@PathVariable String username, @RequestBody UserRequestDto userRequestDto) {
-        return null;
+        return userService.patchUser(@PathVariable String username);
     }
 
     @DeleteMapping("/@{username}")
