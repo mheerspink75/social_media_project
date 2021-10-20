@@ -129,6 +129,25 @@ public class Seeder implements CommandLineRunner {
         user5.setDeleted(false);
         userRepository.saveAndFlush(user5);
 
+        // --- User 6 ---
+        // Credentials
+        Credentials user6Cred = new Credentials();
+        user6Cred.setUsername("DeletedUser");
+        user6Cred.setPassword("Password");
+
+        User user6 = new User();
+        user6.setCredentials(user6Cred);
+
+        // Profile
+        Profile user6Pro = new Profile();
+        user6Pro.setFirstName("Deleted");
+        user6Pro.setLastName("User");
+        user6Pro.setEmail("Deleted@User.com");
+        user6Pro.setPhone("NULL");
+        user6.setProfile(user6Pro);
+        // Deleted
+        user6.setDeleted(true);
+        userRepository.saveAndFlush(user6);
 
         // ----- TWEETS -----
 
