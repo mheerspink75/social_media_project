@@ -1,10 +1,96 @@
 package com.cooksys.team4.services.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
+
+import com.cooksys.team4.dtos.ContextDto;
+import com.cooksys.team4.dtos.CredentialsDto;
+import com.cooksys.team4.dtos.HashTagDto;
+import com.cooksys.team4.dtos.TweetResponseDto;
+import com.cooksys.team4.dtos.UserResponseDto;
+import com.cooksys.team4.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TweetServiceImpl {
+public class TweetServiceImpl implements TweetService{@Override
+	public List<TweetResponseDto> getTweets() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TweetResponseDto postTweet(CredentialsDto credentialsDto, String content) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TweetResponseDto getTweetById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TweetResponseDto deleteTweetById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void likeTweet(Long id, CredentialsDto credentialsDto) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public TweetResponseDto replyTweet(Long id, CredentialsDto credentialsDto, String content) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<HashTagDto> getHashTags(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserResponseDto> getLikes(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ContextDto getContext(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<TweetResponseDto> getReplies(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<TweetResponseDto> getReposts(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserResponseDto> getMentions(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }
