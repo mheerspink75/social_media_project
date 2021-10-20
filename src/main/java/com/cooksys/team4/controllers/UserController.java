@@ -32,7 +32,7 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping
     public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
-        return null;
+        return userService.createUser(userRequestDto);
     }
 
     @GetMapping("/@{username}")

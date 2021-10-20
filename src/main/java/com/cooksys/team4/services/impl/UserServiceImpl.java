@@ -7,6 +7,8 @@ import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserRequestDto;
 import com.cooksys.team4.dtos.UserResponseDto;
+import com.cooksys.team4.entities.User;
+import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.mappers.UserMapper;
 import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.UserService;
@@ -21,6 +23,19 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+    private boolean validateUserRequest(UserRequestDto userRequestDto)  {
+        if (userRequestDto.getCredentials() == null) {
+            throw new BadRequestException("All fields are required");
+        }
+
+        return false;
+    }
+
+//    private void validatUsername(UserRequestDto userRequestDto) {
+//        String username = userRequestDto.getCredentials().getUsername();
+//        System.out.println(username);
+//    }
 
     /**
      * TODO: implement Retrieves all active (non-deleted) users as an array.
@@ -41,8 +56,15 @@ public class UserServiceImpl implements UserService {
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----users
      */
     @Override
-    public UserResponseDto createUser(UserRequestDto user) {
-        return null;
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+
+        if (userRepository.findByAllByUsernameAndDeletedFalse().isPresent() || validateUserRequest(userRequestDto)) {
+            throw new BadRequestException("User already exits");
+        }
+        User userToSave = userMapper.requestDtoToEntity(userRequestDto);
+        userToSave.setDeleted(false);
+
+        return userMapper.entityToResponseDto(userRepository.saveAndFlush(userToSave));
     }
 
     /**

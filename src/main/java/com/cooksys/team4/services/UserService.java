@@ -24,7 +24,7 @@ public interface UserService {
      * 
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----users
      */
-    public UserResponseDto createUser(UserRequestDto user);
+    UserResponseDto createUser(UserRequestDto user);
 
     /**
      * Retrieves a user with the given username. If no such user exists or is
