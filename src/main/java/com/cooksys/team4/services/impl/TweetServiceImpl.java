@@ -19,11 +19,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TweetServiceImpl implements TweetService{
-	
+
 	private final TweetMapper tweetMapper;
 	private final TweetRepository tweetRepository;
-	
-	
+
+
 	@Override
 	public List<TweetResponseDto> getTweets() {
 		List<Tweet> tweetEntities = tweetRepository.findAllByDeletedOrderByPosted(false);
@@ -51,7 +51,7 @@ public class TweetServiceImpl implements TweetService{
 	@Override
 	public void likeTweet(Long id, CredentialsDto credentialsDto) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -101,5 +101,5 @@ public class TweetServiceImpl implements TweetService{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }
