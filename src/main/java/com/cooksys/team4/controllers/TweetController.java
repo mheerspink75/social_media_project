@@ -95,7 +95,8 @@ public class TweetController {
      * body is sent. Request: 'Credentials'
      */
     @PostMapping("/{id}/like")
-    public void addLike(@PathVariable long id) {
+    public void addLike(@PathVariable long id, @RequestBody CredentialsDto credentialsDto) {
+    	tweetService.likeTweet(id, credentialsDto);
     }
 
     /**

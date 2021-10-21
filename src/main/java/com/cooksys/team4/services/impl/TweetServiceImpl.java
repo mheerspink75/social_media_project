@@ -112,8 +112,13 @@ public class TweetServiceImpl implements TweetService{
 
 	@Override
 	public void likeTweet(Long id, CredentialsDto credentialsDto) {
-		// TODO Auto-generated method stub
-
+		final User user = userRepository.findByCredentialsUsernameAndDeletedFalse(credentialsDto.getUsername())
+				.filter(m -> m.getCredentials().getPassword().equals(credentialsDto.getPassword()))
+				.orElseThrow(() -> new NotAuthorizedException("User is not authorized"));
+		tweetRepository.findByIdAndDeletedFalse(id).ifPresentOrElse(tweet -> {
+			tweet.getLikes().add(user);
+			tweetRepository.save(tweet);
+		}, () -> {throw new NotFoundException("Tweet not found");});  
 	}
 
 	@Override
