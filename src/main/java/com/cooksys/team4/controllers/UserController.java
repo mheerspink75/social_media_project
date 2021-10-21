@@ -44,8 +44,9 @@ public class UserController {
 
     @ResponseStatus(code = HttpStatus.OK)
     @PatchMapping("/@{username}")
-    public UserResponseDto patchUser(@PathVariable String username, @RequestBody UserRequestDto userRequestDto) {
-        return userService.updateUser(username, userRequestDto);
+    public UserResponseDto patchUser(@PathVariable String username,
+                                     @RequestBody UserRequestDto userRequestDto) {
+        return userService.updateUserProfile(username, userRequestDto);
     }
 
     @ResponseStatus(code = HttpStatus.ACCEPTED)

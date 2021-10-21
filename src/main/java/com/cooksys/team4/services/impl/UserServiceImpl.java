@@ -3,12 +3,11 @@ package com.cooksys.team4.services.impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.cooksys.team4.dtos.CredentialsDto;
-import com.cooksys.team4.dtos.TweetResponseDto;
-import com.cooksys.team4.dtos.UserRequestDto;
-import com.cooksys.team4.dtos.UserResponseDto;
+import com.cooksys.team4.dtos.*;
+import com.cooksys.team4.entities.Profile;
 import com.cooksys.team4.entities.User;
 import com.cooksys.team4.exceptions.BadRequestException;
+import com.cooksys.team4.exceptions.NotAuthorizedException;
 import com.cooksys.team4.exceptions.NotFoundException;
 import com.cooksys.team4.mappers.UserMapper;
 import com.cooksys.team4.repositories.UserRepository;
@@ -30,6 +29,32 @@ public class UserServiceImpl implements UserService {
         if (userRequestDto.getCredentials() == null || userRequestDto.getCredentials().getUsername() == null || userRequestDto.getCredentials().getPassword() == null || userRequestDto.getProfile() == null || userRequestDto.getProfile().getEmail() == null) {
             throw new BadRequestException("All fields are required");
         }
+    }
+
+    private boolean validateCredentials(UserRequestDto userRequestDto) {
+
+        final var credentials = Optional.ofNullable(userRequestDto.getCredentials());
+
+        final var usernameFromRequest =
+                credentials.map(CredentialsDto::getUsername).flatMap(Optional::ofNullable).orElse(
+                        "");
+        final var passwordFromRequest =
+                credentials.map(CredentialsDto::getPassword).flatMap(Optional::ofNullable).orElse("");
+
+        final var user =
+                userRepository.findByCredentialsUsernameAndDeletedFalse(usernameFromRequest)
+                .filter(u -> u.getCredentials().getPassword().equals(passwordFromRequest) && u.getCredentials().getUsername().equals(usernameFromRequest));
+        final var userFromDb = user.get().getCredentials();
+
+//        if (Objects.equals(userFromDb.getUsername(), usernameFromRequest) && Objects.equals(userFromDb.getPassword(), passwordFromRequest)) {
+//            return true;
+//        }
+        if (userFromDb.getUsername().equals(userRequestDto.getCredentials().getUsername()) && userFromDb.getPassword().equals(userRequestDto.getCredentials().getPassword())) {
+            return true;
+        } else {
+
+            throw new BadRequestException("Username or password don't match");
+        }
 
     }
 
@@ -43,6 +68,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return false;
+    }
+
+    private boolean checkIfUserExistsNotDeleted(String username) {
+
+        if (checkIfUserExists(username) && !userRepository.findByCredentialsUsernameAndDeletedFalse(username).get().isDeleted()) {
+            return true;
+        }
+        throw new BadRequestException("User does not exist");
     }
 
     private User handleUserExists(User user) {
@@ -114,16 +147,40 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * TODO: implement Updates the profile of a user with the given username. If no
-     * such user exists, the user is deleted, or the provided credentials do not
+     * TODO: implement Updates the profile of a user with the given username.
+     * If no such user exists, the user is deleted, or the provided credentials do not
      * match the user, an error should be sent in lieu of a response. In the case of
      * a successful update, the returned user should contain the updated data.
      * 
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#patch---usersusername">...</a>
      */
     @Override
-    public UserResponseDto updateUser(String username, UserRequestDto user) {
-        return null;
+    public UserResponseDto updateUserProfile(String username, UserRequestDto userRequestDto) {
+
+        Optional<User> optionalUser =
+                userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+
+        User userToUpdate = optionalUser.orElseThrow(() -> new NotFoundException(
+                "User doesn't exist"));
+        if (optionalUser.isPresent() && userToUpdate.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword()) && userToUpdate.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername())) {
+
+            ProfileDto profileDto = userRequestDto.getProfile();
+            Profile newProfile = new Profile();
+            newProfile.setFirstName(profileDto.getFirstName());
+            newProfile.setLastName(profileDto.getLastName());
+            newProfile.setEmail(profileDto.getEmail());
+            newProfile.setPhone(profileDto.getPhone());
+
+            userToUpdate.setProfile(newProfile);
+
+            userRepository.saveAndFlush(userToUpdate);
+
+            return userMapper.entityToResponseDto(userToUpdate);
+        }
+        optionalUser.get().setDeleted(true);
+        userRepository.saveAndFlush(userToUpdate);
+
+        throw new NotAuthorizedException("Username or password do not match");
     }
 
     /**
