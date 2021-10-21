@@ -19,7 +19,7 @@ public interface TweetService {
 	
 	public TweetResponseDto getTweetById(Long id);
 	
-	public TweetResponseDto deleteTweetById(Long id);
+	public TweetResponseDto deleteTweetById(CredentialsDto credentialsDto, long id);
 	
 	public void likeTweet(Long id, CredentialsDto credentialsDto);
 	

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetRequestDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.services.TweetService;
@@ -77,8 +78,10 @@ public class TweetController {
      * that even if a tweet is deleted, data with relationships to it (like replies
      * and reposts) are still intact. Request: 'Credentials' Response: 'Tweet'
      */
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @DeleteMapping("/{id}")
-    public void deleteTweet(@PathVariable long id) {
+    public TweetResponseDto deleteTweet(@RequestBody CredentialsDto credentialsDto, @PathVariable long id) {
+        return tweetService.deleteTweetById(credentialsDto, id);
     }
 
     /**

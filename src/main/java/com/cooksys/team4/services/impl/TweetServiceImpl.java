@@ -86,10 +86,24 @@ public class TweetServiceImpl implements TweetService{
 		return tweetMapper.entityToResponseDto(tweetEntity.get());
 	}
 
+	/**
+	 * FIXME: refactor authorization out
+	 * FIXME: refactor User comparison
+	 */
 	@Override
-	public TweetResponseDto deleteTweetById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public TweetResponseDto deleteTweetById(CredentialsDto credentialsDto, long id) {
+		final var credentials = Optional.ofNullable(credentialsDto);
+		final var username = credentials.map(CredentialsDto::getUsername).flatMap(Optional::ofNullable).orElse("");
+		final var password = credentials.map(CredentialsDto::getPassword).flatMap(Optional::ofNullable).orElse("");
+		final var user = userRepository.findByCredentialsUsernameAndDeletedFalse(username)
+			.filter(u -> u.getCredentials().getPassword().equals(password))
+			.orElseThrow(() -> new NotAuthorizedException("User is not authorized"));
+		final var tweet = tweetRepository.findByIdAndDeletedFalse(id)
+			.orElseThrow(() -> new BadRequestException("Tweet does not exist"));
+		if (user.getId().longValue() != tweet.getAuthor().getId().longValue()) throw new NotAuthorizedException("User is not authorized");
+		tweet.setDeleted(true);
+		tweetRepository.saveAndFlush(tweet);
+		return tweetMapper.entityToResponseDto(tweet);
 	}
 
 	@Override
