@@ -32,17 +32,17 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.CREATED)
     @PostMapping
     public UserResponseDto createUser(@RequestBody UserRequestDto userRequestDto) {
-        return null;
+        return userService.createUser(userRequestDto);
     }
 
     @GetMapping("/@{username}")
     public UserResponseDto getUser(@PathVariable String username) {
-        return null;
+        return userService.getUser(username);
     }
 
     @PatchMapping("/@{username}")
     public UserResponseDto patchUser(@PathVariable String username, @RequestBody UserRequestDto userRequestDto) {
-        return null;
+        return userService.updateUser(username, userRequestDto);
     }
 
     @DeleteMapping("/@{username}")

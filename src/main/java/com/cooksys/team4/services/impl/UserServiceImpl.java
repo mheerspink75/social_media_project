@@ -7,6 +7,9 @@ import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserRequestDto;
 import com.cooksys.team4.dtos.UserResponseDto;
+import com.cooksys.team4.entities.Credentials;
+import com.cooksys.team4.entities.User;
+import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.mappers.UserMapper;
 import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.UserService;
@@ -22,13 +25,48 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    private void validateUserRequest(UserRequestDto userRequestDto)  {
+
+        if (userRequestDto.getCredentials() == null || userRequestDto.getCredentials().getUsername() == null || userRequestDto.getCredentials().getPassword() == null || userRequestDto.getProfile() == null || userRequestDto.getProfile().getEmail() == null) {
+            throw new BadRequestException("All fields are required");
+        }
+
+    }
+
+    private boolean checkIfUserExists(String username) {
+
+        Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
+
+        if (optionalUser.isPresent()) {
+            throw new BadRequestException("A user with username : " + username
+                    + " already exists");
+        }
+
+        return false;
+    }
+
+    private User handleUserExists(User user) {
+        if (user.isDeleted()) {
+            user.setDeleted(false);
+            userRepository.saveAndFlush(user);
+            return user;
+        }
+        throw new BadRequestException("User exists and is active");
+    }
+
+    private User handleNotUserExists(User userToSave) {
+        userRepository.saveAndFlush(userToSave);
+        return userToSave;
+    }
+
     /**
      * TODO: implement Retrieves all active (non-deleted) users as an array.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----users
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----users">...</a>
      */
     @Override
     public List<UserResponseDto> getAllUsers() {
+
         return userMapper.entitiesToResponseDtos(userRepository.findAllByDeletedFalse());
     }
 
@@ -38,22 +76,40 @@ public class UserServiceImpl implements UserService {
      * response. If the given credentials match a previously-deleted user,
      * re-activate the deleted user instead of creating a new one.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----users
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----users">...</a>
      */
     @Override
-    public UserResponseDto createUser(UserRequestDto user) {
-        return null;
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+
+        validateUserRequest(userRequestDto);
+        String username = userRequestDto.getCredentials().getUsername();
+
+        User userToSave = userMapper.requestDtoToEntity(userRequestDto);
+        Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
+        User user =
+                optionalUser.map(this::handleUserExists).orElseGet(() -> handleNotUserExists(userToSave));
+
+        return userMapper.entityToResponseDto(userToSave);
     }
 
     /**
      * TODO: implement Retrieves a user with the given username. If no such user
      * exists or is deleted, an error should be sent in lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusername
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusername">...</a>
      */
     @Override
-    public Optional<UserResponseDto> getUser(String username) {
-        return Optional.empty();
+    public UserResponseDto getUser(String username) {
+        Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
+        User existingUser = optionalUser.orElseThrow(() -> new BadRequestException(
+                "User doesn't exist"));
+
+        if (existingUser.isDeleted()) {
+            throw new BadRequestException("Unable to get user");
+        }
+
+        return userMapper.entityToResponseDto(existingUser);
+
     }
 
     /**
@@ -62,7 +118,7 @@ public class UserServiceImpl implements UserService {
      * match the user, an error should be sent in lieu of a response. In the case of
      * a successful update, the returned user should contain the updated data.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#patch---usersusername
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#patch---usersusername">...</a>
      */
     @Override
     public UserResponseDto updateUser(String username, UserRequestDto user) {
@@ -78,7 +134,7 @@ public class UserServiceImpl implements UserService {
      * keep track of "deleted" users so that if a user is re-activated, all of their
      * tweets and information are restored.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#delete--usersusername
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#delete--usersusername">...</a>
      */
     @Override
     public UserResponseDto deleteUser(String username, CredentialsDto credentials) {
@@ -93,7 +149,7 @@ public class UserServiceImpl implements UserService {
      * match an active user in the database, an error should be sent as a response.
      * If successful, no data is sent.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernamefollow
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernamefollow">...</a>
      */
     @Override
     public void followUser(String username, CredentialsDto credentials) {
@@ -107,7 +163,7 @@ public class UserServiceImpl implements UserService {
      * match an active user in the database, an error should be sent as a response.
      * If successful, no data is sent.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernameunfollow
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernameunfollow">...</a>
      */
     @Override
     public void unfollowUser(String username, CredentialsDto credentials) {
@@ -121,7 +177,7 @@ public class UserServiceImpl implements UserService {
      * with that username exists (deleted or never created), an error should be sent
      * in lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefeed
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefeed">...</a>
      */
     @Override
     public List<TweetResponseDto> getFeed(String username) {
@@ -135,7 +191,7 @@ public class UserServiceImpl implements UserService {
      * that username exists (deleted or never created), an error should be sent in
      * lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernametweets
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernametweets">...</a>
      */
     @Override
     public List<TweetResponseDto> getTweets(String username) {
@@ -160,7 +216,7 @@ public class UserServiceImpl implements UserService {
      * Only active users should be included in the response. If no active user with
      * the given username exists, an error should be sent in lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowers
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowers">...</a>
      */
     @Override
     public List<UserResponseDto> getFollowers(String username) {
@@ -173,7 +229,7 @@ public class UserServiceImpl implements UserService {
      * user with the given username exists, an error should be sent in lieu of a
      * response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowing
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowing">...</a>
      */
     @Override
     public List<UserResponseDto> getFollowing(String username) {

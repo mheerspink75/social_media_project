@@ -38,6 +38,7 @@ public class User {
     @CreationTimestamp
     private Timestamp joined;
 
+
     @Column(nullable = false)
     private boolean deleted;
 

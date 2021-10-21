@@ -12,7 +12,7 @@ public interface UserService {
     /**
      * Retrieves all active (non-deleted) users as an array.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----users
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----users">...</a>
      */
     List<UserResponseDto> getAllUsers();
 
@@ -22,17 +22,17 @@ public interface UserService {
      * the given credentials match a previously-deleted user, re-activate the
      * deleted user instead of creating a new one.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----users
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----users">...</a>
      */
-    public UserResponseDto createUser(UserRequestDto user);
+    UserResponseDto createUser(UserRequestDto user);
 
     /**
      * Retrieves a user with the given username. If no such user exists or is
      * deleted, an error should be sent in lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusername
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusername">...</a>
      */
-    public Optional<UserResponseDto> getUser(String username);
+    UserResponseDto getUser(String username);
 
     /**
      * Updates the profile of a user with the given username. If no such user
@@ -40,7 +40,7 @@ public interface UserService {
      * user, an error should be sent in lieu of a response. In the case of a
      * successful update, the returned user should contain the updated data.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#patch---usersusername
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#patch---usersusername">...</a>
      */
     public UserResponseDto updateUser(String username, UserRequestDto user);
 
@@ -53,7 +53,7 @@ public interface UserService {
      * track of "deleted" users so that if a user is re-activated, all of their
      * tweets and information are restored.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#delete--usersusername
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#delete--usersusername">...</a>
      */
     public UserResponseDto deleteUser(String username, CredentialsDto credentials);
 
@@ -65,7 +65,7 @@ public interface UserService {
      * the database, an error should be sent as a response. If successful, no data
      * is sent.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernamefollow
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernamefollow">...</a>
      */
     public void followUser(String username, CredentialsDto credentials);
 
@@ -77,7 +77,7 @@ public interface UserService {
      * active user in the database, an error should be sent as a response. If
      * successful, no data is sent.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernameunfollow
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernameunfollow">...</a>
      */
     public void unfollowUser(String username, CredentialsDto credentials);
 
@@ -89,7 +89,7 @@ public interface UserService {
      * that username exists (deleted or never created), an error should be sent in
      * lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefeed
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefeed">...</a>
      */
     public List<TweetResponseDto> getFeed(String username);
 
@@ -100,7 +100,7 @@ public interface UserService {
      * username exists (deleted or never created), an error should be sent in lieu
      * of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernametweets
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernametweets">...</a>
      */
     public List<TweetResponseDto> getTweets(String username);
 
@@ -118,7 +118,7 @@ public interface UserService {
      * users should be included in the response. If no active user with the given
      * username exists, an error should be sent in lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowers
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowers">...</a>
      */
     public List<UserResponseDto> getFollowers(String username);
 
@@ -127,7 +127,7 @@ public interface UserService {
      * users should be included in the response. If no active user with the given
      * username exists, an error should be sent in lieu of a response.
      * 
-     * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowing
+     * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowing">...</a>
      */
     public List<UserResponseDto> getFollowing(String username);
 }
