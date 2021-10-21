@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetRequestDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
+import com.cooksys.team4.dtos.UserRequestDto;
+import com.cooksys.team4.dtos.UserResponseDto;
 import com.cooksys.team4.services.TweetService;
 
 import lombok.RequiredArgsConstructor;
@@ -147,7 +149,8 @@ public class TweetController {
      * should be excluded from the response. Response: ['User']
      */
     @GetMapping("/{id}/likes")
-    public void getLikes(@PathVariable long id) {
+    public List<UserResponseDto> getLikes(@PathVariable long id) {
+    	return tweetService.getLikes(id);
     }
 
     /**

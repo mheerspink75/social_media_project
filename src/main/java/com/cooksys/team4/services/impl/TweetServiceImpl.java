@@ -1,5 +1,7 @@
 package com.cooksys.team4.services.impl;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,11 +14,13 @@ import com.cooksys.team4.dtos.HashTagDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserResponseDto;
 import com.cooksys.team4.entities.Tweet;
+import com.cooksys.team4.entities.User;
 import com.cooksys.team4.entities.Hashtag;
 import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.exceptions.NotAuthorizedException;
 import com.cooksys.team4.exceptions.NotFoundException;
 import com.cooksys.team4.mappers.TweetMapper;
+import com.cooksys.team4.mappers.UserMapper;
 import com.cooksys.team4.parsers.TweetParser;
 import com.cooksys.team4.repositories.HashTagRepository;
 import com.cooksys.team4.repositories.TweetRepository;
@@ -35,7 +39,7 @@ public class TweetServiceImpl implements TweetService{
 	private final UserRepository userRepository;
 	private final HashTagRepository hashtagRepository;
 	private final TweetParser tweetParser;
-
+	private final UserMapper userMapper;
 
 	@Override
 	public List<TweetResponseDto> getTweets() {
@@ -132,8 +136,18 @@ public class TweetServiceImpl implements TweetService{
 
 	@Override
 	public List<UserResponseDto> getLikes(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Tweet> tweetEntity = tweetRepository.findById(id);
+		if(!(tweetEntity.isPresent() || tweetEntity.get().isDeleted())) {
+			throw new NotFoundException("No tweet with such id was found");
+		}
+		List<User> usersAll = tweetEntity.get().getLikes();
+		List<User> activeUsers = new ArrayList<>(); 
+		for (User user : usersAll) {
+			if (!user.isDeleted()) {
+				activeUsers.add(user);
+			}
+		}
+		return userMapper.entitiesToResponseDtos(activeUsers);
 	}
 
 	@Override
