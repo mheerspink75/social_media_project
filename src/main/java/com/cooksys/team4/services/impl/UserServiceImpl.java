@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
         User user =
                 optionalUser.map(this::handleUserExists).orElseGet(() -> handleNotUserExists(userToSave));
 
-        return userMapper.entityToResponseDto(userToSave);
+        return userMapper.entityToResponseDto(user);
     }
 
     /**
