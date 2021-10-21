@@ -157,7 +157,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateUserProfile(String username, UserRequestDto userRequestDto) {
 
-        // DB User
         Optional<User> optionalUser =
                 userRepository.findByCredentialsUsernameAndDeletedFalse(username);
 
@@ -165,14 +164,12 @@ public class UserServiceImpl implements UserService {
                 "User doesn't exist"));
         if (optionalUser.isPresent() && userToUpdate.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword()) && userToUpdate.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername())) {
 
-        // If user exists and is not deleted
             ProfileDto profileDto = userRequestDto.getProfile();
             Profile newProfile = new Profile();
             newProfile.setFirstName(profileDto.getFirstName());
             newProfile.setLastName(profileDto.getLastName());
             newProfile.setEmail(profileDto.getEmail());
             newProfile.setPhone(profileDto.getPhone());
-
 
             userToUpdate.setProfile(newProfile);
 
@@ -185,32 +182,6 @@ public class UserServiceImpl implements UserService {
 
         throw new NotAuthorizedException("Username or password do not match");
     }
-
-
-//    @Override
-//    public UserResponseDto updateUserProfile(String username,
-//                                          UserRequestDto userRequestDto) {
-////        if (checkIfUserExists(username) && checkIfUserExistsNotDeleted(username) && validateCredentials(userRequestDto)) {
-//        Optional<User> optionalUser = userRepository.findByCredentialsUsernameAndDeletedFalse(username);
-//        if (optionalUser.isPresent() && validateCredentials(userRequestDto)) {
-//        // Request
-//            ProfileDto userProfile = userRequestDto.getProfile();
-//            // DB User
-//            User userToUpdate =
-//                    userRepository.findByCredentialsUsernameAndDeletedFalse(userRequestDto.getCredentials().getUsername())
-//                                    .filter(u -> u.getCredentials().getPassword().equals())
-//
-//            userToUpdate.getProfile().setFirstName(userProfile.getFirstName());
-//            userToUpdate.getProfile().setLastName(userProfile.getLastName());
-//            userToUpdate.getProfile().setPhone(userProfile.getPhone());
-//
-//            userRepository.saveAndFlush(userToUpdate);
-//
-//            return userMapper.entityToResponseDto(userToUpdate);
-//        }
-//        throw new BadRequestException("Username or password do not match");
-//
-//    }
 
     /**
      * TODO: implement "Deletes" a user with the given username. If no such user
