@@ -1,16 +1,11 @@
 package com.cooksys.team4.services.impl;
 
-import com.cooksys.team4.entities.User;
-import com.cooksys.team4.exceptions.BadRequestException;
-import com.cooksys.team4.mappers.UserMapper;
-import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.ValidateService;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
