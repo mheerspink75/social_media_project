@@ -42,7 +42,7 @@ public interface UserService {
      * 
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#patch---usersusername">...</a>
      */
-    public UserResponseDto updateUser(String username, UserRequestDto user);
+    UserResponseDto updateUser(String username, UserRequestDto user);
 
     /**
      * "Deletes" a user with the given username. If no such user exists or the
