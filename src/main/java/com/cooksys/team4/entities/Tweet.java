@@ -63,7 +63,7 @@ public class Tweet {
     @JoinTable
     private List<Hashtag> hashtags;
 
-    @ManyToMany(mappedBy = "mentions")
+    @ManyToMany
+    @JoinTable
     private List<User> userMentioned;
-
 }

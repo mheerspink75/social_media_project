@@ -7,7 +7,6 @@ import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserRequestDto;
 import com.cooksys.team4.dtos.UserResponseDto;
-import com.cooksys.team4.entities.Credentials;
 import com.cooksys.team4.entities.User;
 import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.exceptions.NotFoundException;
@@ -102,6 +101,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto getUser(String username) {
         Optional<User> optionalUser = userRepository.findByCredentialsUsername(username);
+
         User existingUser = optionalUser.orElseThrow(() -> new NotFoundException(
                 "User doesn't exist"));
 
