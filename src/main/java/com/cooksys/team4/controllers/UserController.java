@@ -23,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping
     public List<UserResponseDto> getAllUsers() {
 
@@ -35,16 +36,19 @@ public class UserController {
         return userService.createUser(userRequestDto);
     }
 
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("/@{username}")
     public UserResponseDto getUser(@PathVariable String username) {
         return userService.getUser(username);
     }
 
+    @ResponseStatus(code = HttpStatus.OK)
     @PatchMapping("/@{username}")
     public UserResponseDto patchUser(@PathVariable String username, @RequestBody UserRequestDto userRequestDto) {
         return userService.updateUser(username, userRequestDto);
     }
 
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
     @DeleteMapping("/@{username}")
     public UserResponseDto deleteUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
         return null;
@@ -62,26 +66,31 @@ public class UserController {
 
     }
 
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("/@{username}/feed")
     public List<TweetResponseDto> getFeed(@PathVariable String username) {
         return null;
     }
 
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("/@{username}/tweets")
     public List<TweetResponseDto> getTweets(@PathVariable String username) {
         return null;
     }
 
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("/@{username}/mentions")
     public List<TweetResponseDto> getMentions(@PathVariable String username) {
         return null;
     }
 
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("@{username}/followers")
     public List<UserResponseDto> getFollowers(@PathVariable String username) {
         return null;
     }
 
+    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("@{username}/following")
     public List<UserResponseDto> getFollowing(@PathVariable String username) {
         return null;
