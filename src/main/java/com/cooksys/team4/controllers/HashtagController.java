@@ -1,5 +1,8 @@
 package com.cooksys.team4.controllers;
 
+import com.cooksys.team4.dtos.HashTagDto;
+import com.cooksys.team4.services.HashTagService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,18 +10,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/tags")
 
 public class HashtagController {
 
-    @GetMapping
-    public void getTags() {
+    private HashTagService hashTagService;
 
-        /**
-         * TODO: implement Get /tags Response: 'Hashtag'
-         */
+    @GetMapping
+    public List<HashTagDto> getAllHashtags() {
+        return hashTagService.getAllHashtags();
     }
 
     @GetMapping("/{label}")
