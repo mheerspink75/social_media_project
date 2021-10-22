@@ -25,6 +25,7 @@ import com.cooksys.team4.parsers.TweetParser;
 import com.cooksys.team4.repositories.HashTagRepository;
 import com.cooksys.team4.repositories.TweetRepository;
 import com.cooksys.team4.repositories.UserRepository;
+import com.cooksys.team4.services.AuthService;
 import com.cooksys.team4.services.TweetService;
 
 import java.util.stream.Collectors;
@@ -40,6 +41,7 @@ public class TweetServiceImpl implements TweetService{
 	private final HashTagRepository hashtagRepository;
 	private final TweetParser tweetParser;
 	private final UserMapper userMapper;
+	private final AuthService authService;
 
 	@Override
 	public List<TweetResponseDto> getTweets() {
@@ -54,13 +56,8 @@ public class TweetServiceImpl implements TweetService{
 	@Transactional
 	@Override
 	public TweetResponseDto postTweet(CredentialsDto credentialsDto, String inputContent) {
+		final var user = authService.authenticate(credentialsDto);
 		final var content = Optional.ofNullable(inputContent).filter(s -> s.length() > 0).orElseThrow(() -> new BadRequestException("Empty content"));
-		final var credentials = Optional.ofNullable(credentialsDto);
-		final var username = credentials.map(CredentialsDto::getUsername).flatMap(Optional::ofNullable).orElse("");
-		final var password = credentials.map(CredentialsDto::getPassword).flatMap(Optional::ofNullable).orElse("");
-		final var user = userRepository.findByCredentialsUsernameAndDeletedFalse(username)
-			.filter(u -> u.getCredentials().getPassword().equals(password))
-			.orElseThrow(() -> new NotAuthorizedException("User is not authorized"));
 		final var mentions = tweetParser.parseMentions(content).stream()
 			.map(u -> userRepository.findByCredentialsUsernameAndDeletedFalse(u).orElseThrow(() -> new BadRequestException(u + " does not exist")))
 			.collect(Collectors.toList());
@@ -96,12 +93,7 @@ public class TweetServiceImpl implements TweetService{
 	 */
 	@Override
 	public TweetResponseDto deleteTweetById(CredentialsDto credentialsDto, long id) {
-		final var credentials = Optional.ofNullable(credentialsDto);
-		final var username = credentials.map(CredentialsDto::getUsername).flatMap(Optional::ofNullable).orElse("");
-		final var password = credentials.map(CredentialsDto::getPassword).flatMap(Optional::ofNullable).orElse("");
-		final var user = userRepository.findByCredentialsUsernameAndDeletedFalse(username)
-			.filter(u -> u.getCredentials().getPassword().equals(password))
-			.orElseThrow(() -> new NotAuthorizedException("User is not authorized"));
+		final var user = authService.authenticate(credentialsDto);
 		final var tweet = tweetRepository.findByIdAndDeletedFalse(id)
 			.orElseThrow(() -> new BadRequestException("Tweet does not exist"));
 		if (user.getId().longValue() != tweet.getAuthor().getId().longValue()) throw new NotAuthorizedException("User is not authorized");
@@ -112,9 +104,7 @@ public class TweetServiceImpl implements TweetService{
 
 	@Override
 	public void likeTweet(Long id, CredentialsDto credentialsDto) {
-		final User user = userRepository.findByCredentialsUsernameAndDeletedFalse(credentialsDto.getUsername())
-				.filter(m -> m.getCredentials().getPassword().equals(credentialsDto.getPassword()))
-				.orElseThrow(() -> new NotAuthorizedException("User is not authorized"));
+		final var user = authService.authenticate(credentialsDto);
 		tweetRepository.findByIdAndDeletedFalse(id).ifPresentOrElse(tweet -> {
 			tweet.getLikes().add(user);
 			tweetRepository.save(tweet);
