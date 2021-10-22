@@ -135,8 +135,10 @@ public class TweetController {
      * relationship. The response should contain the newly-created tweet. Request:
      * 'Credentials' Response: 'Tweet'
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{id}/repost")
-    public void addRepost(@PathVariable long id) {
+    public TweetResponseDto addRepost(@PathVariable long id, @RequestBody CredentialsDto credentialsDto) {
+        return tweetService.repostTweet(id, credentialsDto);
     }
 
     /**
@@ -194,7 +196,8 @@ public class TweetController {
      * should be excluded from the response. Response: ['Tweet']
      */
     @GetMapping("/{id}/reposts")
-    public void getReposts(@PathVariable long id) {
+    public List<TweetResponseDto> getReposts(@PathVariable long id) {
+        return tweetService.getReposts(id);
     }
 
     /**

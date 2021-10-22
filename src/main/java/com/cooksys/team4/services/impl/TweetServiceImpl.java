@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import static java.util.function.Predicate.not;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +32,6 @@ import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.AuthService;
 import com.cooksys.team4.services.TweetService;
 
-
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -57,10 +54,6 @@ public class TweetServiceImpl implements TweetService{
 		return tweetMapper.entitiesToResponseDtos(tweetEntities);
 	}
 
-	/**
-	 * FIXME: consider using constant-time string comparison for passwords
-	 * FIXME: consider moving authorization outside this function
-	 */
 	@Transactional
 	@Override
 	public TweetResponseDto postTweet(CredentialsDto credentialsDto, String inputContent) {
@@ -96,7 +89,6 @@ public class TweetServiceImpl implements TweetService{
 	}
 
 	/**
-	 * FIXME: refactor authorization out
 	 * FIXME: refactor User comparison
 	 */
 	@Override
@@ -151,9 +143,13 @@ public class TweetServiceImpl implements TweetService{
 	}
 
 	@Override
-	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public TweetResponseDto repostTweet(long id, CredentialsDto credentialsDto) {
+		final var author = authService.authenticate(credentialsDto);
+		final var originalTweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new BadRequestException("Tweet with supplied id does not exist"));
+		final var tweet = new Tweet();
+		tweet.setAuthor(author);
+		tweet.setRepostOf(originalTweet);
+		return tweetMapper.entityToResponseDto(tweetRepository.saveAndFlush(tweet));
 	}
 
 	@Override
@@ -238,9 +234,10 @@ public class TweetServiceImpl implements TweetService{
 	}
 
 	@Override
-	public List<TweetResponseDto> getReposts(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<TweetResponseDto> getReposts(long id) {
+		final var tweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new BadRequestException("Tweet with supplied id does not exist"));
+		final var reposts = tweet.getReposts().stream().filter(not(Tweet::isDeleted)).collect(Collectors.toList());
+		return tweetMapper.entitiesToResponseDtos(reposts);
 	}
 
 	@Override

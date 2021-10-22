@@ -25,7 +25,7 @@ public interface TweetService {
 	
 	public TweetResponseDto replyTweet(Long id, CredentialsDto credentialsDto, String content);
 	
-	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto);
+	public TweetResponseDto repostTweet(long id, CredentialsDto credentialsDto);
 	
 	public List<HashTagDto> getHashTags(Long id);
 	
@@ -35,7 +35,7 @@ public interface TweetService {
 	
 	public List<TweetResponseDto> getReplies(Long id);
 	
-	public List<TweetResponseDto> getReposts(Long id);
+	public List<TweetResponseDto> getReposts(long id);
 	
 	public List<UserResponseDto> getMentions(Long id); 
 	
