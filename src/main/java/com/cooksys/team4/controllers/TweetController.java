@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cooksys.team4.dtos.ContentRequestDto;
 import com.cooksys.team4.dtos.ContextDto;
 import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.HashTagDto;
