@@ -90,6 +90,7 @@ public class UserController {
     @GetMapping("@{username}/followers")
     public List<UserResponseDto> getFollowers(@PathVariable String username) {
         return userService.getFollowers(username);
+
     }
 
     @ResponseStatus(code = HttpStatus.OK)

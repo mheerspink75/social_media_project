@@ -1,10 +1,7 @@
 package com.cooksys.team4;
 
 
-import com.cooksys.team4.entities.Credentials;
-import com.cooksys.team4.entities.Profile;
-import com.cooksys.team4.entities.Tweet;
-import com.cooksys.team4.entities.User;
+import com.cooksys.team4.entities.*;
 import com.cooksys.team4.repositories.HashTagRepository;
 import com.cooksys.team4.repositories.TweetRepository;
 import com.cooksys.team4.repositories.UserRepository;

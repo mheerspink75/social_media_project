@@ -1,7 +1,10 @@
 package com.cooksys.team4.controllers;
 
 import com.cooksys.team4.dtos.HashTagDto;
+import com.cooksys.team4.entities.Hashtag;
+import com.cooksys.team4.entities.Tweet;
 import com.cooksys.team4.services.HashTagService;
+import com.cooksys.team4.services.TweetService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +22,7 @@ import java.util.List;
 public class HashtagController {
 
     private HashTagService hashTagService;
+    //private TweetService tweetService;
 
     @GetMapping
     public List<HashTagDto> getAllHashtags() {

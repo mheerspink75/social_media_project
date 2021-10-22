@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -65,7 +66,7 @@ public class ValidateServiceImpl implements ValidateService {
      */
     @Override
     public boolean hashtagExists(String label) {
-        Optional<Hashtag> optionalHashtag = hashTagRepository.findOneByLabelIgnoreCase(label);
+       Optional<Hashtag> optionalHashtag = hashTagRepository.findOneByLabelIgnoreCase(label);
         if (optionalHashtag.isPresent()) {
             Hashtag hashtag1 = optionalHashtag.get();
             if (hashtag1.getLabel().equals(label)) {

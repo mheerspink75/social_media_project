@@ -37,7 +37,7 @@ public class ValidateController {
         return validateService.usernameAvailable(username);
     }
 
-    @GetMapping("/tag/exists/@{label}")
+    @GetMapping("/tag/exists/{label}")
     public boolean tagExists(@PathVariable String label) {
         /**
          * TODO: implement Get /tag/exists/@{label} Checks whether or not a given

@@ -1,6 +1,7 @@
 package com.cooksys.team4.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.cooksys.team4.dtos.HashTagDto;
 import com.cooksys.team4.entities.Hashtag;
