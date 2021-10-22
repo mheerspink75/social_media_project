@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.team4.dtos.ContextDto;
 import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetRequestDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
@@ -165,7 +166,8 @@ public class TweetController {
      * Response: 'Context'
      */
     @GetMapping("/{id}/context")
-    public void getContext(@PathVariable long id) {
+    public ContextDto getContext(@PathVariable long id) {
+    	return tweetService.getContext(id);
     }
 
     /**

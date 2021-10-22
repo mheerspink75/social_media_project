@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Stack;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +29,11 @@ import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.AuthService;
 import com.cooksys.team4.services.TweetService;
 
+
+
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -136,7 +141,7 @@ public class TweetServiceImpl implements TweetService{
 			throw new NotFoundException("No tweet with such id was found");
 		}
 		List<User> usersAll = tweetEntity.get().getLikes();
-		List<User> activeUsers = new ArrayList<>(); 
+l		List<User> activeUsers = new ArrayList<>(); 
 		for (User user : usersAll) {
 			if (!user.isDeleted()) {
 				activeUsers.add(user);
@@ -147,9 +152,49 @@ public class TweetServiceImpl implements TweetService{
 
 	@Override
 	public ContextDto getContext(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Tweet target = tweetRepository.findByIdAndDeletedFalse(id)
+				.orElseThrow(() -> new NotFoundException("Tweet not found"));
+		List<Tweet> before = new LinkedList<>();
+		//Tweet current = target.getInReplyTo();
+//		while (current != null) {
+//			before.add(current);
+//			current = current.getInReplyTo();
+//		}
+		for (Tweet current = target.getInReplyTo(); current != null; current = current.getInReplyTo()) {
+			before.add(current);		
+		}
+		
+		
+		Stack<Tweet> collectAfter = new Stack<Tweet>();
+		
+		for (Tweet tweet : target.getReplies()) {
+			collectAfter.push(tweet);
+		}
+		
+		List<Tweet> after = new ArrayList<>();
+		
+		while (collectAfter.peek() != null) {
+			Tweet next = collectAfter.pop();
+			after.add(next);
+			for (Tweet tweet : next.getReplies()) {
+				collectAfter.push(tweet);
+			}
+		}
+		
+		ContextDto contextDto = new ContextDto();
+		contextDto.setBefore(before.stream().filter((m) -> !m.isDeleted()).sorted((a, b) -> {
+			return a.getPosted().compareTo(b.getPosted());
+		}).map((s) -> tweetMapper.entityToResponseDto(s)).collect(Collectors.toList()));
+	
+		contextDto.setAfter(after.stream().filter((m) -> !m.isDeleted()).sorted((a, b) -> {
+			return a.getPosted().compareTo(b.getPosted());
+		}).map((s) -> tweetMapper.entityToResponseDto(s)).collect(Collectors.toList()));
+		
+		contextDto.setTarget(tweetMapper.entityToResponseDto(target));
+		
+		return contextDto;
 	}
+
 
 	@Override
 	public List<TweetResponseDto> getReplies(Long id) {
