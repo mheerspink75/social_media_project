@@ -153,8 +153,12 @@ public class TweetServiceImpl implements TweetService{
 
 	@Override
 	public List<TweetResponseDto> getReplies(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Tweet> tweetEntity = tweetRepository.findById(id);
+		if(!(tweetEntity.isPresent() || tweetEntity.get().isDeleted())) {
+			throw new NotFoundException("No tweet with such id was found");
+		}
+		List<Tweet> listTweets = tweetEntity.get().getReplies().stream().filter((t) -> !t.isDeleted()).collect(Collectors.toList());
+		return tweetMapper.entitiesToResponseDtos(listTweets);
 	}
 
 	@Override
