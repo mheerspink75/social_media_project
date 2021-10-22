@@ -5,6 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import static java.util.function.Predicate.not;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,11 +32,6 @@ import com.cooksys.team4.repositories.TweetRepository;
 import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.AuthService;
 import com.cooksys.team4.services.TweetService;
-
-
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import lombok.RequiredArgsConstructor;
 
@@ -212,9 +210,10 @@ l		List<User> activeUsers = new ArrayList<>();
 	}
 
 	@Override
-	public List<TweetResponseDto> getReposts(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<TweetResponseDto> getReposts(long id) {
+		final var tweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new BadRequestException("Tweet with supplied id does not exist"));
+		final var reposts = tweet.getReposts().stream().filter(not(Tweet::isDeleted)).collect(Collectors.toList());
+		return tweetMapper.entitiesToResponseDtos(reposts);
 	}
 
 	@Override

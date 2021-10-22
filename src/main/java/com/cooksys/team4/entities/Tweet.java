@@ -52,7 +52,7 @@ public class Tweet {
     @JoinColumn
     private Tweet repostOf;
 
-    @OneToMany(mappedBy = "reposts")
+    @OneToMany(mappedBy = "repostOf")
     private List<Tweet> reposts;
 
     @ManyToMany

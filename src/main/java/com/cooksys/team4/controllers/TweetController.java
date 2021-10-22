@@ -190,7 +190,8 @@ public class TweetController {
      * should be excluded from the response. Response: ['Tweet']
      */
     @GetMapping("/{id}/reposts")
-    public void getReposts(@PathVariable long id) {
+    public List<TweetResponseDto> getReposts(@PathVariable long id) {
+        return tweetService.getReposts(id);
     }
 
     /**
