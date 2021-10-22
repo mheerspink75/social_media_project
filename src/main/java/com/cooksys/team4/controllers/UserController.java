@@ -52,13 +52,13 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     @DeleteMapping("/@{username}")
     public UserResponseDto deleteUser(@PathVariable String username, @RequestBody CredentialsDto credentialsDto) {
-        return null;
+        return userService.deleteUser(username, credentialsDto);
     }
 
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping("/@{username}/follow")
     public void addFollower(@RequestBody CredentialsDto credentialsDto, @PathVariable String username) {
-
+        userService.followUser(username, credentialsDto);
     }
 
     @ResponseStatus(code = HttpStatus.OK)

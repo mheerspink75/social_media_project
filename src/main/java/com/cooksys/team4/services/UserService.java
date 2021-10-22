@@ -55,7 +55,7 @@ public interface UserService {
      * 
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#delete--usersusername">...</a>
      */
-    public UserResponseDto deleteUser(String username, CredentialsDto credentials);
+    UserResponseDto deleteUser(String username, CredentialsDto credentials);
 
     /**
      * Subscribes the user whose credentials are provided by the request body to the
@@ -67,7 +67,7 @@ public interface UserService {
      * 
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernamefollow">...</a>
      */
-    public void followUser(String username, CredentialsDto credentials);
+    void followUser(String username, CredentialsDto credentials);
 
     /**
      * Unsubscribes the user whose credentials are provided by the request body from

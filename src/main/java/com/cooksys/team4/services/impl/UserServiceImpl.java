@@ -1,5 +1,7 @@
 package com.cooksys.team4.services.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,31 +33,13 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private boolean validateCredentials(UserRequestDto userRequestDto) {
+    private boolean validateCredentialsFromRequest(String username,
+                                          UserRequestDto userRequestDto) {
 
-        final var credentials = Optional.ofNullable(userRequestDto.getCredentials());
+        Optional<User> optionalUser =
+                userRepository.findByCredentialsUsername(username);
 
-        final var usernameFromRequest =
-                credentials.map(CredentialsDto::getUsername).flatMap(Optional::ofNullable).orElse(
-                        "");
-        final var passwordFromRequest =
-                credentials.map(CredentialsDto::getPassword).flatMap(Optional::ofNullable).orElse("");
-
-        final var user =
-                userRepository.findByCredentialsUsernameAndDeletedFalse(usernameFromRequest)
-                .filter(u -> u.getCredentials().getPassword().equals(passwordFromRequest) && u.getCredentials().getUsername().equals(usernameFromRequest));
-        final var userFromDb = user.get().getCredentials();
-
-//        if (Objects.equals(userFromDb.getUsername(), usernameFromRequest) && Objects.equals(userFromDb.getPassword(), passwordFromRequest)) {
-//            return true;
-//        }
-        if (userFromDb.getUsername().equals(userRequestDto.getCredentials().getUsername()) && userFromDb.getPassword().equals(userRequestDto.getCredentials().getPassword())) {
-            return true;
-        } else {
-
-            throw new BadRequestException("Username or password don't match");
-        }
-
+        return optionalUser.isPresent() && checkIfUserExistsNotDeleted(username) && userRequestDto.getCredentials().getPassword().equals(optionalUser.get().getCredentials().getPassword()) && userRequestDto.getCredentials().getUsername().equals(optionalUser.get().getCredentials().getUsername());
     }
 
     private boolean checkIfUserExists(String username) {
@@ -75,7 +59,7 @@ public class UserServiceImpl implements UserService {
         if (checkIfUserExists(username) && !userRepository.findByCredentialsUsernameAndDeletedFalse(username).get().isDeleted()) {
             return true;
         }
-        throw new BadRequestException("User does not exist");
+        throw new BadRequestException("User does not exist or is deleted");
     }
 
     private User handleUserExists(User user) {
@@ -162,7 +146,8 @@ public class UserServiceImpl implements UserService {
 
         User userToUpdate = optionalUser.orElseThrow(() -> new NotFoundException(
                 "User doesn't exist"));
-        if (optionalUser.isPresent() && userToUpdate.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword()) && userToUpdate.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername())) {
+
+        if (userToUpdate.getCredentials().getPassword().equals(userRequestDto.getCredentials().getPassword()) && userToUpdate.getCredentials().getUsername().equals(userRequestDto.getCredentials().getUsername())) {
 
             ProfileDto profileDto = userRequestDto.getProfile();
             Profile newProfile = new Profile();
@@ -177,15 +162,14 @@ public class UserServiceImpl implements UserService {
 
             return userMapper.entityToResponseDto(userToUpdate);
         }
-        optionalUser.get().setDeleted(true);
-        userRepository.saveAndFlush(userToUpdate);
 
         throw new NotAuthorizedException("Username or password do not match");
     }
 
     /**
-     * TODO: implement "Deletes" a user with the given username. If no such user
-     * exists or the provided credentials do not match the user, an error should be
+     * TODO: implement "Deletes" a user with the given username.
+     * If no such user exists or the provided credentials do not match the user, an
+     * error should be
      * sent in lieu of a response. If a user is successfully "deleted", the response
      * should contain the user data prior to deletion. IMPORTANT: This action should
      * not actually drop any records from the database! Instead, develop a way to
@@ -193,25 +177,69 @@ public class UserServiceImpl implements UserService {
      * tweets and information are restored.
      * 
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#delete--usersusername">...</a>
+     *
+     * TODO: Handle a missing credential property
      */
     @Override
-    public UserResponseDto deleteUser(String username, CredentialsDto credentials) {
-        return null;
+    public UserResponseDto deleteUser(String username, CredentialsDto credentials)  {
+        Optional<User> optionalUser =
+                Optional.ofNullable(userRepository.findByCredentialsUsernameAndDeletedFalse(username).orElseThrow(() -> new NotFoundException(
+                        "User Not Found")));
+
+        User userToDelete = optionalUser.orElseThrow(() -> new NotFoundException(
+                "User doesn't exist"));
+
+        userToDelete.setDeleted(true);
+        return userMapper.entityToResponseDto(userRepository.saveAndFlush(userToDelete));
+
     }
 
     /**
-     * TODO: implement Subscribes the user whose credentials are provided by the
-     * request body to the user whose username is given in the url. If there is
-     * already a following relationship between the two users, no such followable
-     * user exists (deleted or never created), or the credentials provided do not
+     * TODO Subscribes the user whose credentialsDto are provided by the request body
+     * to the user whose username is given in the url. If there is already a
+     * following relationship between the two users, no such followable user
+     * exists (deleted or never created), or the credentialsDto provided do not
      * match an active user in the database, an error should be sent as a response.
+     *
      * If successful, no data is sent.
-     * 
+     *
+     *  credentialsDto to follow username
+     *
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#post----usersusernamefollow">...</a>
      */
     @Override
-    public void followUser(String username, CredentialsDto credentials) {
+    public void followUser(String followerUsername, CredentialsDto credentialsDto) {
+
+        final var credentials = Optional.ofNullable(credentialsDto);
+
+        final var username =
+                credentials.map(CredentialsDto::getUsername).flatMap(Optional::ofNullable).orElse("");
+
+        final var password = credentials.map(CredentialsDto::getPassword).flatMap(Optional::ofNullable).orElse("");
+
+        // Follower
+        final var user =
+                userRepository.findByCredentialsUsernameAndDeletedFalse(username)
+                        .filter(u -> u.getCredentials().getPassword().equals(password))
+                        .orElseThrow(() -> new NotAuthorizedException("Username and " +
+                                "Password need to be provided"));
+
+        // User to follow
+        final var follower =
+                userRepository.findByCredentialsUsernameAndDeletedFalse(followerUsername).orElseThrow(() -> new NotFoundException("User To Follow Not Found"));
+
+        // Check if already follower
+        if (!follower.getFollowers().contains(user)) {
+
+            follower.getFollowers().add(user);
+
+
+            userRepository.saveAndFlush(follower);
+
+        }
+
     }
+
 
     /**
      * TODO: implement Unsubscribes the user whose credentials are provided by the
