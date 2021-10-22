@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cooksys.team4.dtos.ContextDto;
 import com.cooksys.team4.dtos.CredentialsDto;
+import com.cooksys.team4.dtos.HashTagDto;
 import com.cooksys.team4.dtos.TweetRequestDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserRequestDto;
@@ -141,7 +142,8 @@ public class TweetController {
      * and mentions must be parsed by the server! Response: ['Hashtag']
      */
     @GetMapping("/{id}/tags")
-    public void getTags(@PathVariable long id) {
+    public List<HashTagDto> getTags(@PathVariable long id) {
+    	return tweetService.getHashTags(id);
     }
 
     /**

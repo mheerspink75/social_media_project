@@ -20,6 +20,7 @@ import com.cooksys.team4.entities.Hashtag;
 import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.exceptions.NotAuthorizedException;
 import com.cooksys.team4.exceptions.NotFoundException;
+import com.cooksys.team4.mappers.HashtagMapper;
 import com.cooksys.team4.mappers.TweetMapper;
 import com.cooksys.team4.mappers.UserMapper;
 import com.cooksys.team4.parsers.TweetParser;
@@ -47,6 +48,7 @@ public class TweetServiceImpl implements TweetService{
 	private final TweetParser tweetParser;
 	private final UserMapper userMapper;
 	private final AuthService authService;
+	private final HashtagMapper hashtagMapper;
 
 	@Override
 	public List<TweetResponseDto> getTweets() {
@@ -130,8 +132,11 @@ public class TweetServiceImpl implements TweetService{
 
 	@Override
 	public List<HashTagDto> getHashTags(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Tweet> tweetEntity = tweetRepository.findById(id);
+		if(!(tweetEntity.isPresent() || tweetEntity.get().isDeleted())) {
+			throw new NotFoundException("No tweet with such id was found");
+		}
+		return hashtagMapper.entitiesToResponseDtos(tweetEntity.get().getHashtags());
 	}
 
 	@Override
