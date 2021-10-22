@@ -95,7 +95,7 @@ public class TweetServiceImpl implements TweetService{
 	public TweetResponseDto deleteTweetById(CredentialsDto credentialsDto, long id) {
 		final var user = authService.authenticate(credentialsDto);
 		final var tweet = tweetRepository.findByIdAndDeletedFalse(id)
-			.orElseThrow(() -> new BadRequestException("Tweet does not exist"));
+			.orElseThrow(() -> new NotFoundException("Tweet does not exist"));
 		if (user.getId().longValue() != tweet.getAuthor().getId().longValue()) throw new NotAuthorizedException("User is not authorized");
 		tweet.setDeleted(true);
 		tweetRepository.saveAndFlush(tweet);
@@ -145,7 +145,7 @@ public class TweetServiceImpl implements TweetService{
 	@Override
 	public TweetResponseDto repostTweet(long id, CredentialsDto credentialsDto) {
 		final var author = authService.authenticate(credentialsDto);
-		final var originalTweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new BadRequestException("Tweet with supplied id does not exist"));
+		final var originalTweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NotFoundException("Tweet with supplied id does not exist"));
 		final var tweet = new Tweet();
 		tweet.setAuthor(author);
 		tweet.setRepostOf(originalTweet);
@@ -235,7 +235,7 @@ public class TweetServiceImpl implements TweetService{
 
 	@Override
 	public List<TweetResponseDto> getReposts(long id) {
-		final var tweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new BadRequestException("Tweet with supplied id does not exist"));
+		final var tweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NotFoundException("Tweet with supplied id does not exist"));
 		final var reposts = tweet.getReposts().stream().filter(not(Tweet::isDeleted)).collect(Collectors.toList());
 		return tweetMapper.entitiesToResponseDtos(reposts);
 	}
