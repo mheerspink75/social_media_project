@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import static java.util.function.Predicate.not;
 
 import org.springframework.stereotype.Service;
@@ -143,7 +142,7 @@ public class TweetServiceImpl implements TweetService{
 			throw new NotFoundException("No tweet with such id was found");
 		}
 		List<User> usersAll = tweetEntity.get().getLikes();
-l		List<User> activeUsers = new ArrayList<>(); 
+		List<User> activeUsers = new ArrayList<>(); 
 		for (User user : usersAll) {
 			if (!user.isDeleted()) {
 				activeUsers.add(user);
