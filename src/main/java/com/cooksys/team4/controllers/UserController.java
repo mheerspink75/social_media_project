@@ -64,6 +64,7 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping("/@{username}/unfollow")
     public void removeFollower(@RequestBody CredentialsDto credentialsDto, @PathVariable String username) {
+        userService.unfollowUser(username, credentialsDto);
 
     }
 
@@ -88,13 +89,13 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("@{username}/followers")
     public List<UserResponseDto> getFollowers(@PathVariable String username) {
-        return null;
+        return userService.getFollowers(username);
     }
 
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("@{username}/following")
     public List<UserResponseDto> getFollowing(@PathVariable String username) {
-        return null;
+        return userService.getFollowing(username);
     }
 
 }

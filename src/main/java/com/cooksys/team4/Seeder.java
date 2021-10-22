@@ -29,7 +29,7 @@ public class Seeder implements CommandLineRunner {
         // Credentials
         Credentials user1Cred = new Credentials();
         user1Cred.setUsername("User1");
-        user1Cred.setPassword("Pass1");
+        user1Cred.setPassword("Password");
 
         User user1 = new User();
         user1.setCredentials(user1Cred);
@@ -131,23 +131,23 @@ public class Seeder implements CommandLineRunner {
 
         // --- User 6 ---
         // Credentials
-        Credentials user6Cred = new Credentials();
-        user6Cred.setUsername("DeletedUser");
-        user6Cred.setPassword("Password");
+        Credentials deletedUserCred = new Credentials();
+        deletedUserCred.setUsername("DeletedUser");
+        deletedUserCred.setPassword("Password");
 
-        User user6 = new User();
-        user6.setCredentials(user6Cred);
+        User deletedUser = new User();
+        deletedUser.setCredentials(deletedUserCred);
 
         // Profile
-        Profile user6Pro = new Profile();
-        user6Pro.setFirstName("Deleted");
-        user6Pro.setLastName("User");
-        user6Pro.setEmail("Deleted@User.com");
-        user6Pro.setPhone("NULL");
-        user6.setProfile(user6Pro);
+        Profile deletedUserPro = new Profile();
+        deletedUserPro.setFirstName("Deleted");
+        deletedUserPro.setLastName("User");
+        deletedUserPro.setEmail("Deleted@User.com");
+        deletedUserPro.setPhone("NULL");
+        deletedUser.setProfile(deletedUserPro);
         // Deleted
-        user6.setDeleted(true);
-        userRepository.saveAndFlush(user6);
+        deletedUser.setDeleted(true);
+        userRepository.saveAndFlush(deletedUser);
 
         // ----- TWEETS -----
 
@@ -248,9 +248,15 @@ public class Seeder implements CommandLineRunner {
         mention1.setContent("This is some content for tweet mention 1");
         tweetRepository.saveAndFlush(mention1);
 
-//        List<Tweet> mentionsList = List.of(mention1);
-//        user1.setMentions(mentionsList);
-//        userRepository.saveAndFlush(user1);
+
+        // Following
+        List<User> following_1 = List.of(user2, user3, user4, deletedUser);
+        user1.setFollowing(following_1);
+
+        List<User> followers_1 = List.of(user5, deletedUser);
+        user1.setFollowers(followers_1);
+        userRepository.saveAndFlush(user1);
+
     }
 
 }
