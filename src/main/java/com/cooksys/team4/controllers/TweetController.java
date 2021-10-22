@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cooksys.team4.dtos.ContentRequestDto;
 import com.cooksys.team4.dtos.ContextDto;
 import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.HashTagDto;
@@ -117,7 +118,10 @@ public class TweetController {
      * 'Credentials'} Response: 'Tweet'
      */
     @PostMapping("/{id}/reply")
-    public void addReply(@PathVariable long id) {
+    public TweetResponseDto addReply(@PathVariable long id, 
+    		@RequestBody TweetRequestDto tweetRequestDto) {
+		return tweetService.replyTweet(id, tweetRequestDto.getCredentials(), 
+				tweetRequestDto.getContent());
     }
 
     /**

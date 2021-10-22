@@ -50,6 +50,7 @@ public class TweetServiceImpl implements TweetService{
 	private final AuthService authService;
 	private final HashtagMapper hashtagMapper;
 
+
 	@Override
 	public List<TweetResponseDto> getTweets() {
 		List<Tweet> tweetEntities = tweetRepository.findAllByDeletedOrderByPosted(false);
@@ -119,9 +120,34 @@ public class TweetServiceImpl implements TweetService{
 	}
 
 	@Override
-	public TweetResponseDto replyTweet(Long id, CredentialsDto credentialsDto, String content) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public TweetResponseDto replyTweet(Long id, CredentialsDto credentialsDto, String inputContent) {
+		User user = authService.authenticate(credentialsDto);
+		Tweet tweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NotFoundException("Tweet not found"));
+		//Tweet newTweet = new Tweet();
+		
+		final var content = Optional.ofNullable(inputContent).filter(s -> s.length() > 0).orElseThrow(() -> new BadRequestException("Empty content"));
+		final var mentions = tweetParser.parseMentions(content).stream()
+			.map(u -> userRepository.findByCredentialsUsernameAndDeletedFalse(u).orElseThrow(() -> new BadRequestException(u + " does not exist")))
+			.collect(Collectors.toList());
+		final var hashtags = tweetParser.parseHashtags(content).stream()
+			.map(label -> hashtagRepository.findOneByLabelIgnoreCase(label).orElseGet(() -> {
+				final var tag = new Hashtag();
+				tag.setLabel(label);
+				hashtagRepository.saveAndFlush(tag);
+				return tag;
+			}))
+			.collect(Collectors.toList());
+		final var newTweet = new Tweet();
+		newTweet.setAuthor(user);
+		newTweet.setContent(content);
+		newTweet.setHashtags(hashtags);
+		newTweet.setUserMentioned(mentions);
+		Tweet persisted = tweetRepository.save(newTweet);
+		tweet.getReplies().add(persisted);
+		persisted.setInReplyTo(tweet);
+		
+		return tweetMapper.entityToResponseDto(persisted);
 	}
 
 	@Override
@@ -146,7 +172,7 @@ public class TweetServiceImpl implements TweetService{
 			throw new NotFoundException("No tweet with such id was found");
 		}
 		List<User> usersAll = tweetEntity.get().getLikes();
-l		List<User> activeUsers = new ArrayList<>(); 
+		List<User> activeUsers = new ArrayList<>(); 
 		for (User user : usersAll) {
 			if (!user.isDeleted()) {
 				activeUsers.add(user);
