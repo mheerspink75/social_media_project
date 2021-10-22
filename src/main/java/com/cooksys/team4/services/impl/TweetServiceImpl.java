@@ -241,9 +241,10 @@ public class TweetServiceImpl implements TweetService{
 	}
 
 	@Override
-	public List<UserResponseDto> getMentions(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<UserResponseDto> getMentions(long id) {
+		final var tweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NotFoundException("Tweet with supplied id does not exist"));
+		final var users = tweet.getUserMentioned().stream().filter(not(User::isDeleted)).collect(Collectors.toList());
+		return userMapper.entitiesToResponseDtos(users);
 	}
 
 }

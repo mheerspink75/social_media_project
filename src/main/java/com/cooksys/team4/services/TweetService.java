@@ -37,7 +37,7 @@ public interface TweetService {
 	
 	public List<TweetResponseDto> getReposts(long id);
 	
-	public List<UserResponseDto> getMentions(Long id); 
+	public List<UserResponseDto> getMentions(long id);
 	
 	
 	
