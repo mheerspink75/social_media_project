@@ -1,5 +1,7 @@
 package com.cooksys.team4.services;
 
+import com.cooksys.team4.dtos.UserResponseDto;
+
 public interface ValidateService {
     /**
      * Checks whether or not a given username exists.
@@ -20,5 +22,5 @@ public interface ValidateService {
      * 
      * @see https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get---validatetagexistslabel
      */
-    public boolean hashtagExists(String hashtag);
+    public boolean hashtagExists(String label);
 }

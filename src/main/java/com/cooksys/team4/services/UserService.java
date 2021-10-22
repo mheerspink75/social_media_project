@@ -130,4 +130,5 @@ public interface UserService {
      * @see <a href="https://github.com/fasttrackd-student-work/spring-assessment-social-media-team4#get-----usersusernamefollowing">...</a>
      */
     public List<UserResponseDto> getFollowing(String username);
+
 }
