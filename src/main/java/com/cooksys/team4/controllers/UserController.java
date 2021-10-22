@@ -69,7 +69,7 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("/@{username}/feed")
     public List<TweetResponseDto> getFeed(@PathVariable String username) {
-        return null;
+        return userService.getFeed(username);
     }
 
     @ResponseStatus(code = HttpStatus.OK)

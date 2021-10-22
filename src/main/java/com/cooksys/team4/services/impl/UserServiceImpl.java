@@ -4,15 +4,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.function.Predicate.not;
 
 import com.cooksys.team4.dtos.*;
 import com.cooksys.team4.entities.Profile;
 import com.cooksys.team4.entities.User;
+import com.cooksys.team4.entities.Tweet;
 import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.exceptions.NotAuthorizedException;
 import com.cooksys.team4.exceptions.NotFoundException;
 import com.cooksys.team4.mappers.TweetMapper;
 import com.cooksys.team4.mappers.UserMapper;
+import com.cooksys.team4.mappers.TweetMapper;
 import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.AuthService;
 import com.cooksys.team4.services.UserService;
@@ -267,7 +272,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<TweetResponseDto> getFeed(String username) {
-        return List.of();
+        final var user = validateUsername(username, "User not found");
+        final var userTweets = user.getTweets().stream().filter(not(Tweet::isDeleted));
+        final var followingTweets = user.getFollowing().stream().filter(not(User::isDeleted)).flatMap(u -> u.getTweets().stream().filter(not(Tweet::isDeleted)));
+        final var tweets = Stream.concat(userTweets, followingTweets)
+            .sorted((a, b) -> b.getPosted().compareTo(a.getPosted()))
+            .collect(Collectors.toList());
+        return tweetMapper.entitiesToResponseDtos(tweets);
     }
 
     /**
