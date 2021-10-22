@@ -1,5 +1,6 @@
 package com.cooksys.team4.services.impl;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import com.cooksys.team4.entities.User;
 import com.cooksys.team4.exceptions.BadRequestException;
 import com.cooksys.team4.exceptions.NotAuthorizedException;
 import com.cooksys.team4.exceptions.NotFoundException;
+import com.cooksys.team4.mappers.TweetMapper;
 import com.cooksys.team4.mappers.UserMapper;
 import com.cooksys.team4.repositories.UserRepository;
 import com.cooksys.team4.services.AuthService;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthService authService;
+    private final TweetMapper tweetMapper;
 
     private void validateUserRequest(UserRequestDto userRequestDto)  {
 
@@ -282,7 +285,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * TODO: implement Retrieves all (non-deleted) tweets in which the user with the
+     * TODO: Retrieves all (non-deleted) tweets in which the user with the
      * given username is mentioned. The tweets should appear in
      * reverse-chronological order. If no active user with that username exists, an
      * error should be sent in lieu of a response. A user is considered "mentioned"
@@ -291,7 +294,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<TweetResponseDto> getMentions(String username) {
-        return List.of();
+
+        User userEntity = validateUsername(username, "Invalid User");
+
+        return tweetMapper.entitiesToResponseDtos(userEntity.getMentions().stream().filter(t -> !t.isDeleted()).sorted(Collections.reverseOrder()).collect(Collectors.toList()));
     }
 
     /**

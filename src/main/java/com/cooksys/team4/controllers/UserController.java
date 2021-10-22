@@ -4,14 +4,12 @@ import java.util.List;
 
 import com.cooksys.team4.services.UserService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.cooksys.team4.dtos.CredentialsDto;
 import com.cooksys.team4.dtos.TweetResponseDto;
 import com.cooksys.team4.dtos.UserRequestDto;
 import com.cooksys.team4.dtos.UserResponseDto;
-import com.cooksys.team4.entities.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -83,7 +81,7 @@ public class UserController {
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping("/@{username}/mentions")
     public List<TweetResponseDto> getMentions(@PathVariable String username) {
-        return null;
+        return userService.getMentions(username);
     }
 
     @ResponseStatus(code = HttpStatus.OK)
