@@ -131,8 +131,10 @@ public class TweetController {
      * relationship. The response should contain the newly-created tweet. Request:
      * 'Credentials' Response: 'Tweet'
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{id}/repost")
-    public void addRepost(@PathVariable long id) {
+    public TweetResponseDto addRepost(@PathVariable long id, @RequestBody CredentialsDto credentialsDto) {
+        return tweetService.repostTweet(id, credentialsDto);
     }
 
     /**

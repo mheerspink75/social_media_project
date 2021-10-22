@@ -54,10 +54,6 @@ public class TweetServiceImpl implements TweetService{
 		return tweetMapper.entitiesToResponseDtos(tweetEntities);
 	}
 
-	/**
-	 * FIXME: consider using constant-time string comparison for passwords
-	 * FIXME: consider moving authorization outside this function
-	 */
 	@Transactional
 	@Override
 	public TweetResponseDto postTweet(CredentialsDto credentialsDto, String inputContent) {
@@ -93,7 +89,6 @@ public class TweetServiceImpl implements TweetService{
 	}
 
 	/**
-	 * FIXME: refactor authorization out
 	 * FIXME: refactor User comparison
 	 */
 	@Override
@@ -123,9 +118,13 @@ public class TweetServiceImpl implements TweetService{
 	}
 
 	@Override
-	public TweetResponseDto repostTweet(Long id, CredentialsDto credentialsDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public TweetResponseDto repostTweet(long id, CredentialsDto credentialsDto) {
+		final var author = authService.authenticate(credentialsDto);
+		final var originalTweet = tweetRepository.findByIdAndDeletedFalse(id).orElseThrow(() -> new BadRequestException("Tweet with supplied id does not exist"));
+		final var tweet = new Tweet();
+		tweet.setAuthor(author);
+		tweet.setRepostOf(originalTweet);
+		return tweetMapper.entityToResponseDto(tweetRepository.saveAndFlush(tweet));
 	}
 
 	@Override
